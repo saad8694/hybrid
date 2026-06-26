@@ -9,4 +9,5 @@ logs/
 !.env.example
 .DS_Store
 coverage/
+allure-results/
 **/*.log

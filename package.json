@@ -1,0 +1,23 @@
+{
+  "name": "hybrid-playwright-framework",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:web": "npx playwright test src/web/tests",
+    "test:api": "npx playwright test src/api/tests",
+    "test:mobile": "npx playwright test src/mobile/tests",
+    "test:ci": "npx playwright test --reporter=list,html,junit",
+    "install:drivers": "npx playwright install",
+    "report:html": "npx playwright show-report",
+    "clean": "rm -rf test-results reports/html reports/allure logs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0",
+    "allure-playwright": "^2.0.0",
+    "dotenv": "^16.3.1",
+    "pg": "^8.11.0",
+    "typescript": "^5.8.3"
+  }
+}

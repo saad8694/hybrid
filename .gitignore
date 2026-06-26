@@ -1,0 +1,12 @@
+node_modules/
+test-results/
+reports/html/
+reports/allure/
+reports/junit/
+logs/
+.env
+.env.*
+!.env.example
+.DS_Store
+coverage/
+**/*.log

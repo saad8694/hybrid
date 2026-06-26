@@ -1,0 +1,99 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: web/tests/login.spec.ts >> Practice Test Login >> should log in with valid credentials
+- Location: src/web/tests/login.spec.ts:17:3
+
+# Error details
+
+```
+Error: expect(page).toHaveURL(expected) failed
+
+Expected pattern: /practice-test-login\/login-success|login-success/
+Received string:  "https://practicetestautomation.com/logged-in-successfully/"
+Timeout: 10000ms
+
+Call log:
+  - Expect "toHaveURL" with timeout 10000ms
+    24 × unexpected value "https://practicetestautomation.com/logged-in-successfully/"
+
+```
+
+```yaml
+- link "Press \"Enter\" to skip to content":
+  - /url: "#main-container"
+- banner:
+  - navigation
+  - link "Practice Test Automation":
+    - /url: https://practicetestautomation.com/
+    - img "Practice Test Automation"
+  - navigation:
+    - navigation:
+      - list:
+        - listitem:
+          - link "Home":
+            - /url: https://practicetestautomation.com/
+        - listitem:
+          - link "Practice":
+            - /url: https://practicetestautomation.com/practice/
+        - listitem:
+          - link "Courses":
+            - /url: https://practicetestautomation.com/courses/
+        - listitem:
+          - link "Blog":
+            - /url: https://practicetestautomation.com/blog/
+        - listitem:
+          - link "Contact":
+            - /url: https://practicetestautomation.com/contact/
+- main:
+  - article:
+    - heading "Logged In Successfully" [level=1]
+    - paragraph:
+      - strong: Congratulations student. You successfully logged in!
+    - link "Log out":
+      - /url: https://practicetestautomation.com/practice-test-login/
+    - paragraph
+- contentinfo:
+  - text: © Copyright 2020
+  - link "Practice Test Automation.":
+    - /url: https://practicetestautomation.com/
+  - text: All rights reserved |
+  - link "Privacy Policy":
+    - /url: https://practicetestautomation.com/privacy-policy/
+```
+
+# Test source
+
+```ts
+  1  | import { expect } from '@playwright/test';
+  2  | import { test } from '../../framework/base/test-base.js';
+  3  | import { addTestMetadata } from '../../framework/reporting/reporting.js';
+  4  | import { LoginPage } from '../pages/login.page.js';
+  5  | 
+  6  | const validUsername = 'student';
+  7  | const validPassword = 'Password123';
+  8  | 
+  9  | test.describe('Practice Test Login', () => {
+  10 |   test('should display login form', async ({ page }) => {
+  11 |     addTestMetadata('WEB-001', 'Verify login form is visible on the practice login page', 'normal');
+  12 |     const loginPage = new LoginPage(page);
+  13 |     await loginPage.navigate();
+  14 |     await expect(loginPage.loginForm).toBeVisible();
+  15 |   });
+  16 | 
+  17 |   test('should log in with valid credentials', async ({ page }) => {
+  18 |     addTestMetadata('WEB-002', 'Verify valid user can log in successfully', 'critical');
+  19 |     const loginPage = new LoginPage(page);
+  20 |     await loginPage.navigate();
+  21 |     await loginPage.login(validUsername, validPassword);
+> 22 |     await expect(page).toHaveURL(/practice-test-login\/login-success|login-success/);
+     |                        ^ Error: expect(page).toHaveURL(expected) failed
+  23 |   });
+  24 | });
+  25 | 
+```

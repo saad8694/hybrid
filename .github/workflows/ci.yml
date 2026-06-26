@@ -1,0 +1,58 @@
+name: Playwright CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-type: [web, api, mobile]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+      - name: Run tests
+        run: |
+          if [ "${{ matrix.test-type }}" = "web" ]; then
+            npm run test:web;
+          elif [ "${{ matrix.test-type }}" = "api" ]; then
+            npm run test:api;
+          else
+            npm run test:mobile;
+          fi
+      - name: Install Allure CLI
+        if: ${{ always() }}
+        run: npm install -g allure-commandline --silent
+      - name: Generate Allure report
+        if: ${{ always() }}
+        run: |
+          mkdir -p reports/allure
+          allure generate allure-results --clean -o reports/allure
+      - name: Upload HTML Report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.test-type }}
+          path: reports/html
+      - name: Upload Allure Report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-${{ matrix.test-type }}
+          path: reports/allure
+      - name: Upload JUnit XML
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-${{ matrix.test-type }}
+          path: reports/junit
